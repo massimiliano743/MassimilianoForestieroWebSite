@@ -68,3 +68,80 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Backend API locale
+
+Nel progetto è presente un semplice server Express nella cartella `server` che espone l'endpoint:
+
+GET /api/hello -> { "message": "Ciaoooo poppi" }
+
+### Avvio backend
+
+```
+cd server
+npm install
+npm start
+```
+
+Il server parte sulla porta 4000 (http://localhost:4000).
+
+### Avvio frontend
+
+In un secondo terminale, dalla root del progetto:
+
+```
+npm install
+npm start
+```
+
+In sviluppo il proxy (campo `proxy` in package.json) inoltra /api/* al backend.
+
+### Build produzione
+
+```
+npm run build
+```
+
+(Se vuoi servire la build con Express aggiungi static + fallback su index.html.)
+
+## Struttura del progetto (architettura attuale)
+
+```
+src/
+  api/
+    helloApi.js          # Funzioni di chiamata API (nessuno stato)
+  hooks/
+    useHello.js          # Logica di fetching + loading/error/data
+  components/
+    Layout.jsx           # Macro layout (wrapper comune)
+    NavBar.jsx           # Navigazione (link principali)
+    HelloMessage.jsx     # Sotto-componente presentazionale (solo props)
+  pages/
+    HomePage.jsx         # Macro-pagina: compone hook + componenti
+    SecondPage.jsx       # Altra macro-pagina
+  App.js                 # Routing (BrowserRouter + Routes)
+  index.js               # Bootstrap React
+```
+
+### Linee guida
+
+- API wrapper: solo funzioni async che ritornano dati o lanciano errori.
+- Hook: orchestrano chiamate, gestiscono stato (loading/error/data) e isolano la logica.
+- Componenti presentazionali: nessuna fetch, solo UI in base alle props.
+- Pagine: aggregano hook + componenti e definiscono la struttura della vista.
+- Layout: contenitore globale (nav, footer, ecc.).
+- Routing centralizzato in `App.js`.
+
+### Aggiungere una nuova pagina
+
+1. Creare eventuale API wrapper (se servono nuove chiamate) in `api/`.
+2. Creare un hook dedicato in `hooks/` (es. `useUsers.js`).
+3. Creare componenti UI riutilizzabili in `components/`.
+4. Creare la macro-pagina in `pages/NuovaPagina.jsx` che usa hook + componenti.
+5. Aggiungere la `<Route />` in `App.js` e il link in `NavBar.jsx`.
+
+### Vantaggi della struttura
+
+- Separazione chiara tra logica (hook) e presentazione (componenti).
+- Facilità di test: i componenti presentazionali sono puri, gli hook si testano isolando fetch.
+- Scalabile: aggiungere pagine non richiede modifiche invasive altrove.
