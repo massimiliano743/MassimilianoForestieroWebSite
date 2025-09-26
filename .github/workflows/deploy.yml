@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # usa la versione corretta
+          node-version: '20'
 
       # 3️⃣ Install server dependencies
       - name: Install server dependencies
@@ -27,12 +27,12 @@ jobs:
 
       # 4️⃣ Install client dependencies
       - name: Install client dependencies
-        working-directory: ./   # se il package.json principale è qui
+        working-directory: ./client  # cartella del client React
         run: npm ci
 
       # 5️⃣ Build client
       - name: Build client
-        working-directory: ./
+        working-directory: ./client
         run: npm run build
 
       # 6️⃣ Copy files to server
@@ -43,10 +43,13 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: |
-            server/**
-            build/**
+          source:
+            - server/**
+            - client/build/**
           target: /root/MassimilianoForestieroWebSite
+          strip_components: 0
+          overwrite: true
+          debug: true
 
       # 7️⃣ Restart server
       - name: Restart Node server
