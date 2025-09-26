@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout del repository
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -27,12 +27,12 @@ jobs:
 
       # 4️⃣ Install client dependencies
       - name: Install client dependencies
-        working-directory: ./client
+        working-directory: ./
         run: npm ci
 
       # 5️⃣ Build client
       - name: Build client
-        working-directory: ./client
+        working-directory: ./
         run: npm run build
 
       # 6️⃣ Copy files to server
@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: "server/** client/build/**"
+          source: "server/** build/**"
           target: /root/MassimilianoForestieroWebSite
           strip_components: 0
           overwrite: true
