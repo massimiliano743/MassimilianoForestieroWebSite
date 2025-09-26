@@ -10,50 +10,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # 1️⃣ Checkout del repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      # 2️⃣ Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '20'  # usa la versione corretta
 
-      - name: Install dependencies for server
-        run: |
-          cd server
-          npm ci
+      # 3️⃣ Install server dependencies
+      - name: Install server dependencies
+        working-directory: ./server
+        run: npm ci
 
-      - name: Install dependencies for client
-        run: |
-          cd ..
-          npm ci
+      # 4️⃣ Install client dependencies
+      - name: Install client dependencies
+        working-directory: ./   # se il package.json principale è qui
+        run: npm ci
 
-      - name: Build React app
-        run: |
-          npm run build
+      # 5️⃣ Build client
+      - name: Build client
+        working-directory: ./
+        run: npm run build
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.7.0
+      # 6️⃣ Copy files to server
+      - name: Deploy files via SSH
+        uses: appleboy/scp-action@v0.1.4
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: 22
+          source: |
+            server/**
+            build/**
+          target: /root/MassimilianoForestieroWebSite
 
-      - name: Deploy to Droplet
-        run: |
-          ssh -o StrictHostKeyChecking=no root@IP_DEL_DROPLET << 'EOF'
-            # Stop Node.js app if già in esecuzione
-            pm2 stop massimiliano || true
-            pm2 delete massimiliano || true
-          
-            # Copia file build e server
-            rsync -avz --delete ./ /var/www/massimilianoforestiero/
-          
-            # Vai nella cartella server e installa dipendenze
-            cd /var/www/massimilianoforestiero/server
-            npm ci
-          
-            # Avvia server con PM2
-            pm2 start index.js --name massimiliano
-          
-            # Riavvia Nginx
-            systemctl restart nginx
-          EOF
+      # 7️⃣ Restart server
+      - name: Restart Node server
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            pm2 stop massimilianoforestiero || true
+            pm2 start /root/MassimilianoForestieroWebSite/server/index.js --name massimilianoforestiero
