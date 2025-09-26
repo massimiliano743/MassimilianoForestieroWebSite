@@ -5,7 +5,7 @@ export function HomePage() {
   const { data, loading, error } = useHello();
   return (
     <div>
-      <h1>Home test</h1>
+      <h1>Home test 1</h1>
       <HelloMessage loading={loading} error={error} message={data?.message || ''} />
     </div>
   );
