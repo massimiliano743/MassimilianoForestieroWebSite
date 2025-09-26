@@ -27,7 +27,7 @@ jobs:
 
       # 4️⃣ Install client dependencies
       - name: Install client dependencies
-        working-directory: ./client  # cartella del client React
+        working-directory: ./client
         run: npm ci
 
       # 5️⃣ Build client
@@ -43,9 +43,7 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source:
-            - server/**
-            - client/build/**
+          source: "server/** client/build/**"
           target: /root/MassimilianoForestieroWebSite
           strip_components: 0
           overwrite: true
