@@ -20,22 +20,26 @@ jobs:
         with:
           node-version: '20'
 
-      # 3️⃣ Install server dependencies
+      # 3️⃣ List files for debug
+      - name: List repository files
+        run: ls -R
+
+      # 4️⃣ Install server dependencies
       - name: Install server dependencies
         working-directory: ./server
         run: npm ci
 
-      # 4️⃣ Install client dependencies
+      # 5️⃣ Install client dependencies
       - name: Install client dependencies
-        working-directory: ./
+        working-directory: ./client
         run: npm ci
 
-      # 5️⃣ Build client
+      # 6️⃣ Build client
       - name: Build client
-        working-directory: ./
+        working-directory: ./client
         run: npm run build
 
-      # 6️⃣ Copy files to server
+      # 7️⃣ Deploy files via SCP
       - name: Deploy files via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -43,13 +47,15 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: "server/** build/**"
+          source: |
+            server/
+            client/build/
           target: /root/MassimilianoForestieroWebSite
           strip_components: 0
           overwrite: true
           debug: true
 
-      # 7️⃣ Restart server
+      # 8️⃣ Restart Node server
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:
