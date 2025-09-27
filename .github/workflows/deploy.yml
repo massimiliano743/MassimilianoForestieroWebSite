@@ -35,6 +35,16 @@ jobs:
         working-directory: ./
         run: npm run build
 
+      # 🔎 Debug workspace
+      - name: Debug workspace
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Top-level files and folders:"
+          ls -la
+          echo "Recursive listing of workspace:"
+          ls -R
+
       # 6️⃣ Copy files to server
       - name: Deploy files via SSH
         uses: appleboy/scp-action@v0.1.4
