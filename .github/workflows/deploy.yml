@@ -61,5 +61,4 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            pm2 stop massimilianoforestiero || true
-            pm2 start /root/MassimilianoForestieroWebSite/server/index.js --name massimilianoforestiero
+            pm2 restart massimilianoforestiero || pm2 start /root/MassimilianoForestieroWebSite/server/index.js --name massimilianoforestiero
