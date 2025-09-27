@@ -39,15 +39,17 @@ jobs:
       - name: Debug workspace
         run: ls -R
 
-      # 7️⃣ Clean build folder sul droplet
-      - name: Clean build folder
+      # 7️⃣ Backup e pulizia della build vecchia sul droplet
+      - name: Backup and clean build folder
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            rm -rf /root/MassimilianoForestieroWebSite/build
+            if [ -d /root/MassimilianoForestieroWebSite/build ]; then
+              mv /root/MassimilianoForestieroWebSite/build /root/MassimilianoForestieroWebSite/build_old_$(date +%s)
+            fi
             mkdir -p /root/MassimilianoForestieroWebSite/build
 
       # 8️⃣ Clean target folder sul droplet (server + altri file)
@@ -86,7 +88,7 @@ jobs:
             chown -R ${{ secrets.DROPLET_USER }}:${{ secrets.DROPLET_USER }} /root/MassimilianoForestieroWebSite
             chmod -R 755 /root/MassimilianoForestieroWebSite
 
-      # 1️⃣1️⃣ Debug hash dei file React (opzionale, per verificare aggiornamenti)
+      # 1️⃣1️⃣ Debug hash dei file React (opzionale)
       - name: Debug React build hashes
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -97,7 +99,7 @@ jobs:
             ls -l /root/MassimilianoForestieroWebSite/build/static/js
             ls -l /root/MassimilianoForestieroWebSite/build/static/css
 
-      # 1️⃣2️⃣ Restart Node server (force delete per evitare porta occupata)
+      # 1️⃣2️⃣ Restart Node server
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -108,3 +110,15 @@ jobs:
             pm2 delete massimilianoforestiero || true
             pm2 start /root/MassimilianoForestieroWebSite/server/index.js --name massimilianoforestiero
             pm2 save
+
+      # 1️⃣3️⃣ (Opzionale) Riavvia cache del browser sul droplet
+      - name: Clear Node static cache
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            # Aggiorna header Cache-Control se Express lo serve da static
+            echo "Aggiorna header statici per evitare caching aggressivo"
+            # Non obbligatorio se usi hash nei file build
