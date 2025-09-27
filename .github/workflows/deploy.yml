@@ -43,7 +43,9 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: "server/** build/**"
+          source: |
+            server/**
+            build/**
           target: /root/MassimilianoForestieroWebSite
           strip_components: 0
           overwrite: true
