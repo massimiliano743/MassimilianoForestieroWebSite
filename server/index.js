@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname, '../build')));
 
 // API example
 app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Sito in costruzione' });
+  res.json({ message: 'Sito in costruzione Test' });
 });
 
 // Per tutte le altre route, ritorna index.html (React Router)
