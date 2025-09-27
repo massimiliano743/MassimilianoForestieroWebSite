@@ -39,7 +39,18 @@ jobs:
       - name: Debug workspace
         run: ls -R
 
-      # 7️⃣ Clean target folder sul droplet
+      # 7️⃣ Clean build folder sul droplet
+      - name: Clean build folder
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            rm -rf /root/MassimilianoForestieroWebSite/build
+            mkdir -p /root/MassimilianoForestieroWebSite/build
+
+      # 8️⃣ Clean target folder sul droplet (server + altri file)
       - name: Clean target folder
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -47,10 +58,10 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            rm -rf /root/MassimilianoForestieroWebSite/*
-            mkdir -p /root/MassimilianoForestieroWebSite
+            rm -rf /root/MassimilianoForestieroWebSite/server
+            mkdir -p /root/MassimilianoForestieroWebSite/server
 
-      # 8️⃣ Deploy files via SSH
+      # 9️⃣ Deploy files via SSH
       - name: Deploy files via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -64,7 +75,7 @@ jobs:
           overwrite: true
           debug: true
 
-      # 9️⃣ Imposta permessi corretti
+      # 🔟 Imposta permessi corretti
       - name: Fix permissions
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -75,7 +86,18 @@ jobs:
             chown -R ${{ secrets.DROPLET_USER }}:${{ secrets.DROPLET_USER }} /root/MassimilianoForestieroWebSite
             chmod -R 755 /root/MassimilianoForestieroWebSite
 
-      # 🔟 Restart Node server (force delete per evitare porta occupata)
+      # 1️⃣1️⃣ Debug hash dei file React (opzionale, per verificare aggiornamenti)
+      - name: Debug React build hashes
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            ls -l /root/MassimilianoForestieroWebSite/build/static/js
+            ls -l /root/MassimilianoForestieroWebSite/build/static/css
+
+      # 1️⃣2️⃣ Restart Node server (force delete per evitare porta occupata)
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:
