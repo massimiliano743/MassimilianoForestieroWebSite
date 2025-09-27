@@ -21,3 +21,28 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# ========================================
+# Extra per deploy con scp (non copiare sul server)
+# ========================================
+
+# Node modules (spesso già presenti, ma conferma)
+node_modules/
+
+# Cartelle Git e CI
+.git/
+.github/
+
+# File di log e cache
+npm-debug.log*
+yarn-error.log*
+*.log
+
+# Lockfile se non necessario sul server
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# File temporanei di sistema
+.DS_Store

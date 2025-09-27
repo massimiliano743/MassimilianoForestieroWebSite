@@ -35,17 +35,11 @@ jobs:
         working-directory: ./
         run: npm run build
 
-      # 🔎 Debug workspace
+      # 6️⃣ Debug workspace (opzionale)
       - name: Debug workspace
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Top-level files and folders:"
-          ls -la
-          echo "Recursive listing of workspace:"
-          ls -R
+        run: ls -R
 
-      # 6️⃣ Copy files to server
+      # 7️⃣ Copy files to server (tutta la repo escluso ciò che c’è in .scpignore)
       - name: Deploy files via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -53,15 +47,13 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: |
-            server/**
-            build/**
+          source: ./**
           target: /root/MassimilianoForestieroWebSite
           strip_components: 0
           overwrite: true
           debug: true
 
-      # 7️⃣ Restart server
+      # 8️⃣ Restart server
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:
