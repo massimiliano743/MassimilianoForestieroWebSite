@@ -39,20 +39,7 @@ jobs:
       - name: Debug workspace
         run: ls -R
 
-      # 7️⃣ Backup e pulizia della build vecchia sul droplet
-      - name: Backup and clean build folder
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DROPLET_SSH_KEY }}
-          script: |
-            if [ -d /root/MassimilianoForestieroWebSite/build ]; then
-              mv /root/MassimilianoForestieroWebSite/build /root/MassimilianoForestieroWebSite/build_old_$(date +%s)
-            fi
-            mkdir -p /root/MassimilianoForestieroWebSite/build
-
-      # 8️⃣ Clean target folder sul droplet (server + altri file)
+      # 7️⃣ Clean target folder sul droplet
       - name: Clean target folder
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -60,10 +47,10 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            rm -rf /root/MassimilianoForestieroWebSite/server
-            mkdir -p /root/MassimilianoForestieroWebSite/server
+            sudo rm -rf /var/www/massimilianoforestiero/*
+            sudo mkdir -p /var/www/massimilianoforestiero
 
-      # 9️⃣ Deploy files via SSH
+      # 8️⃣ Deploy files via SSH
       - name: Deploy files via SSH
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -77,7 +64,7 @@ jobs:
           overwrite: true
           debug: true
 
-      # 🔟 Imposta permessi corretti
+      # 9️⃣ Imposta permessi corretti
       - name: Fix permissions
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -85,21 +72,22 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            chown -R ${{ secrets.DROPLET_USER }}:${{ secrets.DROPLET_USER }} /root/MassimilianoForestieroWebSite
-            chmod -R 755 /root/MassimilianoForestieroWebSite
+            sudo chown -R www-data:www-data /var/www/massimilianoforestiero
+            sudo chmod -R 755 /var/www/massimilianoforestiero
 
-      # 1️⃣1️⃣ Debug hash dei file React (opzionale)
-      - name: Debug React build hashes
+      # 🔟 Debug build sul droplet (verifica file React)
+      - name: Debug build on droplet
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            ls -l /root/MassimilianoForestieroWebSite/build/static/js
-            ls -l /root/MassimilianoForestieroWebSite/build/static/css
+            ls -lh /var/www/massimilianoforestiero/build/static/js
+            ls -lh /var/www/massimilianoforestiero/build/static/css
+            ls -lh /var/www/massimilianoforestiero/server
 
-      # 1️⃣2️⃣ Restart Node server
+      # 1️⃣1️⃣ Restart Node server (force delete per evitare porta occupata)
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -108,17 +96,5 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
             pm2 delete massimilianoforestiero || true
-            pm2 start /root/MassimilianoForestieroWebSite/server/index.js --name massimilianoforestiero
+            pm2 start /var/www/massimilianoforestiero/server/index.js --name massimilianoforestiero
             pm2 save
-
-      # 1️⃣3️⃣ (Opzionale) Riavvia cache del browser sul droplet
-      - name: Clear Node static cache
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DROPLET_SSH_KEY }}
-          script: |
-            # Aggiorna header Cache-Control se Express lo serve da static
-            echo "Aggiorna header statici per evitare caching aggressivo"
-            # Non obbligatorio se usi hash nei file build
