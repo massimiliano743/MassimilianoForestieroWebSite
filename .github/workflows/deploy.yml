@@ -39,32 +39,47 @@ jobs:
       - name: Debug workspace
         run: ls -R
 
-      # 7️⃣ Clean target folder sul droplet
-      - name: Clean target folder
+      # 7️⃣ Clean target folders sul droplet
+      - name: Clean target folders
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            sudo rm -rf /var/www/massimilianoforestiero/*
-            sudo mkdir -p /var/www/massimilianoforestiero
+            rm -rf /var/www/massimilianoforestiero/*
+            mkdir -p /var/www/massimilianoforestiero
+            mkdir -p /var/www/massimilianoforestiero/server
 
-      # 8️⃣ Deploy files via SSH
-      - name: Deploy files via SSH
+      # 8️⃣ Copia la build React nella root
+      - name: Deploy React build
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: 22
-          source: ./**
+          source: build/**
           target: /var/www/massimilianoforestiero
-          strip_components: 0
+          strip_components: 1
           overwrite: true
           debug: true
 
-      # 9️⃣ Imposta permessi corretti
+      # 9️⃣ Copia il backend Node nella cartella server
+      - name: Deploy Node backend
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: 22
+          source: server/**
+          target: /var/www/massimilianoforestiero/server
+          strip_components: 1
+          overwrite: true
+          debug: true
+
+      # 🔟 Imposta permessi corretti
       - name: Fix permissions
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -72,20 +87,8 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            sudo chown -R www-data:www-data /var/www/massimilianoforestiero
-            sudo chmod -R 755 /var/www/massimilianoforestiero
-
-      # 🔟 Debug build sul droplet (verifica file React)
-      - name: Debug build on droplet
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USER }}
-          key: ${{ secrets.DROPLET_SSH_KEY }}
-          script: |
-            ls -lh /var/www/massimilianoforestiero/build/static/js
-            ls -lh /var/www/massimilianoforestiero/build/static/css
-            ls -lh /var/www/massimilianoforestiero/server
+            chown -R www-data:www-data /var/www/massimilianoforestiero
+            chmod -R 755 /var/www/massimilianoforestiero
 
       # 1️⃣1️⃣ Restart Node server (force delete per evitare porta occupata)
       - name: Restart Node server
