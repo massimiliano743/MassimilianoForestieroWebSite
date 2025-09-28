@@ -1,5 +1,5 @@
 import { useHello } from '../hooks/useHello';
-import { HelloMessage } from '../components/HelloMessage';
+import {HelloMessage} from '../components/HelloMessage/HelloMessage';
 
 export function HomePage() {
   const { data, loading, error } = useHello();
