@@ -46,3 +46,4 @@ pnpm-lock.yaml
 
 # File temporanei di sistema
 .DS_Store
+/imagePersonalWebsite/
