@@ -7,9 +7,9 @@ const app = express();
 app.use(cors());
 
 const baseDir = path.resolve(__dirname, '..');
-const buildPath = path.join(baseDir, 'build');
-const homeImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Home');
-const profileImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Profile');
+const homeImagePath = '/root/MassimilianoForestieroWebSite/imagePersonalWebsite/Home';
+const profileImagePath = '/root/MassimilianoForestieroWebSite/imagePersonalWebsite/Profile';
+const buildPath = '/root/MassimilianoForestieroWebSite/build';
 
 app.use(express.static(buildPath));
 app.use('/imagePersonalWebsite/Home', express.static(homeImagePath));
