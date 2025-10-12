@@ -8,17 +8,12 @@ app.use(cors());
 
 const isProd = process.env.NODE_ENV === 'production';
 const baseDir = isProd
-    ? '/var/www/massimilianoforestiero'
-    : path.resolve(__dirname, '..'); // locale
+    ? '/root/MassimilianoForestieroWebSite' // cartella reale con le immagini
+    : path.resolve(__dirname, '..');        // locale
 
-const buildPath = path.join(baseDir, 'build');
 const homeImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Home');
 const profileImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Profile');
 
-// Serve build React
-app.use(express.static(buildPath));
-
-// Serve immagini statiche
 app.use('/imagePersonalWebsite/Home', express.static(homeImagePath));
 app.use('/imagePersonalWebsite/Profile', express.static(profileImagePath));
 
