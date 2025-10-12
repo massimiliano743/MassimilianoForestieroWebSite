@@ -23,13 +23,28 @@
       pointer-events: none;
       background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 5%, transparent 20%)
     }
+
+    .text-and-ribbon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      .slide-text {
+        color: white;
+        text-align: center;
+        margin-bottom: 25px;
+      }
+    }
   }
 
   .swiper-pagination {
     display: flex;
     flex-direction: column;
     align-items: center;
-    right: 2% !important;
+
     gap: 5px;
 
     .swiper-pagination-bullet {
@@ -47,12 +62,24 @@
   }
 }
 
+/*desktop*/
+@media (min-width: 923px) {
+  .mySwiper {
+    .text-and-ribbon {
+      width: 100%;
+      bottom: 10%;
+    }
+
+    .swiper-pagination {
+      right: 2% !important;
+    }
+  }
+}
 /*tablet*/
 @media (min-width: 768px) and (max-width: 922px) {
   .mySwiper {
     .slide-gradient {
       display: none;
-
     }
 
     .swiper-pagination {
@@ -67,6 +94,12 @@
   .mySwiper {
     .slide-gradient {
       display: none;
+    }
+
+    .text-and-ribbon {
+      width: 80%;
+      top: 10%;
+      bottom: unset;
     }
 
     .swiper-pagination {
