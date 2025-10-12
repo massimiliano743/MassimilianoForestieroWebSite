@@ -6,13 +6,10 @@ const fs = require('fs');
 const app = express();
 app.use(cors());
 
-// Determina l'ambiente
 const isProd = process.env.NODE_ENV === 'production';
-
-// Percorso base a seconda dell'ambiente
 const baseDir = isProd
-    ? '/root/MassimilianoForestieroWebSite'        // Server Ubuntu
-    : path.resolve(__dirname, '..');               // Locale
+    ? '/var/www/massimilianoforestiero'
+    : path.resolve(__dirname, '..'); // locale
 
 const buildPath = path.join(baseDir, 'build');
 const homeImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Home');
