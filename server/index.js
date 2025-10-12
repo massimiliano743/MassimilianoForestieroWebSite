@@ -6,7 +6,7 @@ const fs = require('fs');
 const app = express();
 app.use(cors());
 
-const baseDir = path.resolve(__dirname);
+const baseDir = path.resolve(__dirname, '..');
 const buildPath = path.join(baseDir, 'build');
 const homeImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Home');
 const profileImagePath = path.join(baseDir, 'imagePersonalWebsite', 'Profile');
@@ -25,6 +25,7 @@ app.get('/api/get-image-hp-slider', (req, res) => {
     const filteredFiles = files.filter(file => !file.startsWith('.'));
     res.json({filteredFiles});
   } catch (err) {
+    console.error('Errore nella lettura della cartella:', err.message);
     res.status(500).json({error: 'Errore nella lettura della cartella'});
   }
 });
