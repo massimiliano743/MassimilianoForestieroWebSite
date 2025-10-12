@@ -118,7 +118,7 @@ src/
     HelloMessage.jsx     # Sotto-componente presentazionale (solo props)
   pages/
     HomePage.jsx         # Macro-pagina: compone hook + componenti
-    SecondPage.jsx       # Altra macro-pagina
+    AboutMe.jsx       # Altra macro-pagina
   App.js                 # Routing (BrowserRouter + Routes)
   index.js               # Bootstrap React
 ```

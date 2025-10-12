@@ -24,12 +24,11 @@ export function NavBar() {
                              alt="Logo"/>
                     </Link>
                     <Link className={'menu-single-item'} to="/">Home</Link>
-                    <Link className={'menu-single-item'} to="/seconda">About</Link>
-                    <Link className={'menu-single-item'} to="/seconda">Gallery</Link>
-                    <Link className={'menu-single-item'} to="/seconda">Portfolio</Link>
-                    <Link className={'menu-single-item'} to="/seconda">Contacts</Link>
-                    <Link className={'menu-single-item'} to="/seconda">Seconda</Link>
-                    <Link className={'menu-single-item'} to="/seconda">Log-In</Link>
+                    <Link className={'menu-single-item'} to="/About-me">About</Link>
+                    <Link className={'menu-single-item'} to="/Wip">Gallery</Link>
+                    <Link className={'menu-single-item'} to="/Wip">Portfolio</Link>
+                    <Link className={'menu-single-item'} to="/Wip">Contacts</Link>
+                    <Link className={'menu-single-item'} to="/Wip">Log-In</Link>
                 </div>
                 <div className={`nav-left-part ${isOpen ? ' is-open' : ''}`}>
                     <a className={'linkedin social-logo'}

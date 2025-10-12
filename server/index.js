@@ -9,6 +9,7 @@ app.use(cors());
 // Serve i file statici della build di React
 app.use(express.static(path.join(__dirname, '../build')));
 app.use('/imagePersonalWebsite/Home', express.static(path.join(__dirname, '../imagePersonalWebsite/Home')));
+app.use('/imagePersonalWebsite/Profile', express.static(path.join(__dirname, '../imagePersonalWebsite/Profile')));
 
 // API example
 app.get('/api/hello', (req, res) => {
