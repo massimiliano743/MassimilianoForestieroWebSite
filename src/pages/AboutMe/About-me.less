@@ -1,0 +1,95 @@
+.about-me-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 10%;
+
+  .title {
+    margin-top: 30px;
+  }
+
+  .description {
+    margin-top: 20px;
+    gap: 4%;
+    display: flex;
+    flex-direction: row;
+
+    .text-description {
+      color: #333;
+      text-align: justify;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+
+      .separator {
+        width: 60%;
+        height: 2px;
+        border-top: 1px solid #757575;
+        margin: 20px 0;
+      }
+    }
+  }
+}
+
+@media (min-width: 923px) {
+  .about-me-page {
+    .text-description {
+      width: 48%;
+      font-size: 15px;
+    }
+
+    .image-description {
+      width: 48%;
+
+      img {
+        width: 100%;
+        border-radius: 8px;
+      }
+    }
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 922px) {
+  .about-me-page {
+    .text-description {
+      width: 48%;
+      font-size: 15px;
+    }
+
+    .image-description {
+      width: 48%;
+
+      img {
+        width: 100%;
+        border-radius: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .about-me-page {
+    .description {
+      flex-direction: column-reverse;
+      align-items: center;
+
+      .text-description {
+        width: 100%;
+        font-size: 13px;
+      }
+
+      .image-description {
+        width: 100%;
+        margin-bottom: 25px;
+
+        img {
+          width: 100%;
+          border-radius: 8px;
+        }
+      }
+    }
+
+  }
+}

@@ -1,10 +1,12 @@
-import {NavBar} from '../components/NavBar/NavBar';
+import {NavBar} from './NavBar/NavBar';
+import {Footer} from "./Footer/Footer";
 
 export function Layout({ children }) {
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', fontFamily: 'sans-serif' }}>
-        <NavBar/>
-      <main>{children}</main>
+      <div style={{width: '100%'}}>
+          <NavBar/>
+          <main>{children}</main>
+          <Footer/>
     </div>
   );
 }

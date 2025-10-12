@@ -1,13 +1,70 @@
+@import url("https://use.typekit.net/sgb7tel.css");
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #4C4C4C;
+  background-color: #ffffff;
 }
+
+h1 {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: 5px;
+  margin: 0;
+
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 5px;
+  margin: 0;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media (min-width: 923px) {
+  .content-page-template {
+    padding-top: 67px;
+    padding-bottom: 50px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 922px) {
+  .content-page-template {
+    padding-top: 20px;
+    padding-bottom: 30px;
+  }
+}
+@media (max-width: 767px) {
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 5px;
+    margin: 0;
+
+  }
+
+  h3 {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 5px;
+    margin: 0;
+  }
+
+  .content-page-template {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 }
