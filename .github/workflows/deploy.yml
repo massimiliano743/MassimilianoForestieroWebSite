@@ -10,36 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # 3️⃣ Install server dependencies
       - name: Install server dependencies
         working-directory: ./server
         run: npm ci
 
-      # 4️⃣ Install client dependencies
       - name: Install client dependencies
         working-directory: ./
         run: npm ci
 
-      # 5️⃣ Build client
       - name: Build client
         working-directory: ./
         run: npm run build
 
-      # 6️⃣ Debug workspace (opzionale)
       - name: Debug workspace
         run: ls -R
 
-      # 7️⃣ Clean target folders sul droplet
       - name: Clean target folders
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -51,7 +44,6 @@ jobs:
             mkdir -p /var/www/massimilianoforestiero
             mkdir -p /var/www/massimilianoforestiero/server
 
-      # 8️⃣ Copia la build React nella root
       - name: Deploy React build
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -63,9 +55,7 @@ jobs:
           target: /var/www/massimilianoforestiero
           strip_components: 1
           overwrite: true
-          debug: true
 
-      # 9️⃣ Copia il backend Node nella cartella server
       - name: Deploy Node backend
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -77,10 +67,8 @@ jobs:
           target: /var/www/massimilianoforestiero/server
           strip_components: 1
           overwrite: true
-          debug: true
 
-      # 🔟 Imposta permessi corretti
-      - name: Fix permissions
+      - name: Fix permissions & symlink images
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -89,8 +77,11 @@ jobs:
           script: |
             chown -R www-data:www-data /var/www/massimilianoforestiero
             chmod -R 755 /var/www/massimilianoforestiero
+            if [ ! -L /var/www/massimilianoforestiero/imagePersonalWebsite ]; then
+              ln -s /root/MassimilianoForestieroWebSite/imagePersonalWebsite /var/www/massimilianoforestiero/imagePersonalWebsite
+            fi
+            chown -h www-data:www-data /var/www/massimilianoforestiero/imagePersonalWebsite
 
-      # 1️⃣1️⃣ Restart Node server (force delete per evitare porta occupata)
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -99,5 +90,5 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
             pm2 delete massimilianoforestiero || true
-            pm2 start /var/www/massimilianoforestiero/server/index.js --name massimilianoforestiero
+            pm2 start /var/www/massimilianoforestiero/server/index.js --name massimilianoforestiero --env production
             pm2 save
