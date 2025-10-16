@@ -33,7 +33,6 @@ jobs:
       - name: Debug workspace
         run: ls -R
 
-      # 🔹 7️⃣ Pulizia e preparazione directory di deploy
       - name: Clean target folders
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -69,7 +68,6 @@ jobs:
           strip_components: 1
           overwrite: true
 
-      # 🔹 10️⃣ Imposta permessi + ricrea link simbolico immagini
       - name: Fix permissions & symlink images
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -79,13 +77,11 @@ jobs:
           script: |
             chown -R www-data:www-data /var/www/massimilianoforestiero
             chmod -R 755 /var/www/massimilianoforestiero
-            # 🔗 Ricrea il link simbolico alle immagini (se non esiste)
             if [ ! -L /var/www/massimilianoforestiero/imagePersonalWebsite ]; then
               ln -s /root/MassimilianoForestieroWebSite/imagePersonalWebsite /var/www/massimilianoforestiero/imagePersonalWebsite
             fi
             chown -h www-data:www-data /var/www/massimilianoforestiero/imagePersonalWebsite
 
-      # 🔹 11️⃣ Riavvia server Node
       - name: Restart Node server
         uses: appleboy/ssh-action@v0.1.7
         with:

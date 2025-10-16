@@ -20,7 +20,6 @@ app.use('/imagePersonalWebsite/Home', express.static(homeImagePath));
 app.use('/imagePersonalWebsite/Profile', express.static(profileImagePath));
 
 app.get('/api/get-image-hp-slider', (req, res) => {
-  console.log('folder =', homeImagePath)
   fs.readdir(homeImagePath, (err, files) => {
     if (err) {
       console.error('Errore nella lettura della cartella:', err);
