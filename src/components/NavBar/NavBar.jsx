@@ -12,37 +12,59 @@ export function NavBar() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const handleMenuLinkClick = () => {
+        if (isMobile) {
+            setIsOpen(false);
+        }
+    };
+
     return (
         <>
             <nav className={`nav-right-part${isOpen ? ' is-open' : ''}`}>
                 <div className={`nav-right-part${isOpen ? ' is-open' : ''}`}>
                     <Link
-                        to=""
+                        to={isMobile ? "#" : "/"}
                         className={`menu-single-item${isOpen ? ' is-open' : ''}`}
-                        onClick={() => setIsOpen(!isOpen)}>
-                        <img className={'my-logo'} src={isMobile ? "/img/hamburger-menu.svg" : "/img/logo_bianco.png"}
-                             alt="Logo"/>
+                        onClick={(e) => {
+                            if (isMobile) {
+                                e.preventDefault();
+                                setIsOpen(!isOpen);
+                            } else {
+                                setIsOpen(false);
+                            }
+                        }}
+                    >
+                        <img
+                            className="my-logo"
+                            src={isMobile ? "/img/hamburger-menu.svg" : "/img/logo_bianco.png"}
+                            alt="Logo"
+                        />
                     </Link>
-                    <Link className={'menu-single-item'} to="/">Home</Link>
-                    <Link className={'menu-single-item'} to="/About-me">About</Link>
-                    <Link className={'menu-single-item'} to="/Wip">Gallery</Link>
-                    <Link className={'menu-single-item'} to="/Wip">Portfolio</Link>
-                    <Link className={'menu-single-item'} to="/Wip">Contacts</Link>
-                    <Link className={'menu-single-item'} to="/Wip">Log-In</Link>
+
+                    <Link className={'menu-single-item'} to="/" onClick={handleMenuLinkClick}>Home</Link>
+                    <Link className={'menu-single-item'} to="/About-me" onClick={handleMenuLinkClick}>About</Link>
+                    <Link className={'menu-single-item'} to="/Gallery" onClick={handleMenuLinkClick}>Gallery</Link>
+                    <Link className={'menu-single-item'} to="/Portfolio" onClick={handleMenuLinkClick}>Portfolio</Link>
+                    <Link className={'menu-single-item'} to="/Wip" onClick={handleMenuLinkClick}>Contacts</Link>
+                    <Link className={'menu-single-item'} to="/Wip" onClick={handleMenuLinkClick}>Log-In</Link>
                 </div>
+
                 <div className={`nav-left-part ${isOpen ? ' is-open' : ''}`}>
                     <a className={'linkedin social-logo'}
-                       href="https://www.linkedin.com/in/massimiliano-luigi-forestiero-244183b0/" target="_blank"
-                       rel="noopener noreferrer" aria-label="LinkedIn"/>
-                    <a className={'facebook social-logo'} href="https://www.facebook.com/massimiliano.forestiero/"
+                       href="https://www.linkedin.com/in/massimiliano-luigi-forestiero-244183b0/"
+                       target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"/>
+                    <a className={'facebook social-logo'}
+                       href="https://www.facebook.com/massimiliano.forestiero/"
                        target="_blank" rel="noopener noreferrer" aria-label="facebook"/>
-                    <a className={'instagram social-logo'} href="https://www.instagram.com/massimiliano743/?hl=it"
+                    <a className={'instagram social-logo'}
+                       href="https://www.instagram.com/massimiliano743/?hl=it"
                        target="_blank" rel="noopener noreferrer" aria-label="instagram"/>
-                    <a className={'x social-logo'} href="https://x.com/massimiliano94" target="_blank"
-                       rel="noopener noreferrer" aria-label="X"/>
+                    <a className={'x social-logo'}
+                       href="https://x.com/massimiliano94"
+                       target="_blank" rel="noopener noreferrer" aria-label="X"/>
                     <a className={'youtube social-logo'}
-                       href="https://www.youtube.com/c/MassimilianoForestiero/featured" target="_blank"
-                       rel="noopener noreferrer" aria-label="youtube"/>
+                       href="https://www.youtube.com/c/MassimilianoForestiero/featured"
+                       target="_blank" rel="noopener noreferrer" aria-label="youtube"/>
                 </div>
             </nav>
         </>
