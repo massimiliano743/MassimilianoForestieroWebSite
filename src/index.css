@@ -7,7 +7,12 @@ body {
   line-height: 1.42857143;
   color: #4C4C4C;
   background-color: #ffffff;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 h1 {
@@ -27,6 +32,10 @@ h3 {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.hidden {
+  display: none;
 }
 
 
@@ -65,7 +74,6 @@ code {
   }
 
   .content-page-template {
-    padding-top: 20px;
     padding-bottom: 20px;
   }
 }
