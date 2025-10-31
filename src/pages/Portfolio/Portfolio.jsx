@@ -12,14 +12,14 @@ export function Portfolio() {
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
-        fetch('/api/get-image-gallery-portfolio')
+        fetch('/api/get-images-portfolio')
         .then(res => res.json())
         .then(data => {
-            const images = data.filteredFiles.map(filename => ({
-                src: `/imagePersonalWebsite/Portfolio/${filename}`,
+            const images = data.files.map(url => ({
+                src: url,
                 width: 1200,
                 height: 800,
-                alt: filename
+                alt: url.split('/').pop()
             }));
             setFiles(images);
         });

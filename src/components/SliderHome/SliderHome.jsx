@@ -1,15 +1,12 @@
 import './SliderHome.less';
-import {useEffect, useState} from "react";
-import {Ribbon} from "../Ribbon/Ribbon";
-import {Swiper, SwiperSlide} from 'swiper/react';
-import {Keyboard, Mousewheel, Pagination} from 'swiper/modules';
+import { Ribbon } from "../Ribbon/Ribbon";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Keyboard, Mousewheel, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-
-export function SliderHome() {
-    const [files, setFiles] = useState([]);
-
+// The component now accepts 'images' as a prop
+export function SliderHome({ images }) {
     const oggettoPrincipale = {
         slide1: {
             title: "Welcome to My photography portal",
@@ -30,7 +27,7 @@ export function SliderHome() {
             ribbonLink: "/mario"
         },
         slide4: {
-            title: "ARCHITECTURE PHOTOGRAPHY\n",
+            title: "ARCHITECTURE PHOTOGRAPHY",
             subtitle: "",
             ribbonText: "Take a look!",
             ribbonLink: "/mario"
@@ -43,13 +40,7 @@ export function SliderHome() {
         }
     };
 
-    useEffect(() => {
-        fetch('/api/get-image-hp-slider')
-        .then(res => res.json())
-        .then(data => setFiles(data.filteredFiles))
-        .catch(err => console.error('Errore:', err));
-    }, []);
-
+    // The internal fetch is removed, as we now get images from props.
 
     return (
         <>
@@ -58,16 +49,17 @@ export function SliderHome() {
                 direction={'vertical'}
                 modules={[Pagination, Mousewheel, Keyboard]}
                 mousewheel={true}
-                pagination={{clickable: true}}
+                pagination={{ clickable: true }}
                 keyboard={true}
             >
-                {files.map((file, idx) => {
+                {/* We map over the 'images' prop now */}
+                {images && images.map((file, idx) => {
                     const slideKey = `slide${idx + 1}`;
                     const slideData = oggettoPrincipale[slideKey];
                     return (
                         <SwiperSlide key={file}>
                             <div className="single-slide">
-                                <img src={`/imagePersonalWebsite/Home/${file}`} alt={file}/>
+                                <img src={file} alt={`Slide ${idx + 1}`} />
                                 <div className="slide-gradient"></div>
                                 <div className={'text-and-ribbon'}>
                                     <div className="slide-text fade-bottom">

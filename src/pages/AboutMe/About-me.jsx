@@ -1,6 +1,21 @@
+import { useState, useEffect } from 'react';
 import './About-me.less';
 
 export function AboutMe() {
+    const [profileImage, setProfileImage] = useState('');
+    const baseUrl = "https://massimilianoforesti-3914-5d676.web.app";
+
+    useEffect(() => {
+        fetch(`${baseUrl}/api/get-image-profile`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.file) {
+                    setProfileImage(data.file);
+                }
+            })
+            .catch(err => console.error('Errore:', err));
+    }, []);
+
     return (
         <div className={'content-page-template'}>
             <div className={'about-me-page'}>
@@ -13,7 +28,7 @@ export function AboutMe() {
                         I began to develop my interest in photography at the age of 17, when my passion for travel led
                         me to explore magical places, worthy of being immortalized in one shot.<br/>
                         For me Photography means stopping a moment, to make it become a memory capable of blocking time.
-                        An instant that, instead of flying away, can be seen again and again.<br/>
+                        An instant that, instead of flying away, can be seen and again.<br/>
                         A single click able to stop fleeting time forever.<br/>
                         Time, this indefinable element, which, over the years, I have learned to trap not only through
                         photography but also through the creation of videos.
@@ -50,11 +65,10 @@ export function AboutMe() {
                         Ecco, questi sono gran parte dei miei “frames”.
                     </div>
                     <div className={'image-description'}>
-                        <img src={`/imagePersonalWebsite/Profile/profilo.jpg`} alt={'profile-image'}/>
+                        {profileImage && <img src={profileImage} alt={'profile-image'}/>}
                     </div>
                 </div>
             </div>
         </div>
     );
 }
-
