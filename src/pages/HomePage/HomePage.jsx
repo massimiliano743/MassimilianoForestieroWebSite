@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {SliderHome} from "../components/SliderHome/SliderHome";
+import {SliderHome} from "../../components/SliderHome/SliderHome";
 
 export function HomePage() {
     const [images, setImages] = useState([]);
