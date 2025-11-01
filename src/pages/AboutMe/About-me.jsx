@@ -18,7 +18,7 @@ export function AboutMe() {
                 }
             })
             .catch(err => console.error('Errore:', err));
-    }, []);
+    }, [baseUrl]);
 
     return (
         <div className={'content-page-template'}>
@@ -40,9 +40,9 @@ export function AboutMe() {
                         cultures.<br/>
                         A universally valid time but which seems to flow in a discordant way looking at the most
                         disparate cultural contexts, social situations and landscapes.<br/>
-                        Each memory is in a frame<br/>
-                        In one second, 24 frames.<br/>
-                        In a video about ten thousand memories.<br/>
+                        Ogni ricordo è in a frame<br/>
+                        In uno secondo, 24 frames.<br/>
+                        In un video about ten thousand memories.<br/>
 
                         Here they are, these are most of my "frames".
                         <br/>

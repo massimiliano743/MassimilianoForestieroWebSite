@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+git add.import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Gallery.less';
 
@@ -19,7 +19,7 @@ export function Gallery() {
                 }
             })
             .catch(err => console.error('API Error:', err));
-    }, []);
+    }, [baseUrl]);
 
     return (
         <div className={'content-page-template'}>
