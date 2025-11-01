@@ -19,7 +19,6 @@ app.use(cors({ origin: true }));
 const basePath = 'imagePersonalWebsite/';
 
 // --- CENTRALIZED URL GENERATION FUNCTION ---
-// This function now handles both production and emulator environments.
 async function getUrlsForFiles(folderPath) {
     console.log(`--- DEBUG: getUrlsForFiles called for folder: [${folderPath}] ---`);
     try {
@@ -31,28 +30,24 @@ async function getUrlsForFiles(folderPath) {
         }
 
         const urlPromises = files.map(async (file) => {
-            // Skip subfolders placeholders
             if (file.name.endsWith('/')) {
                 return null;
             }
-            
-            // If running in emulator, generate a local URL.
+
             if (isEmulated) {
                 const emulatorHost = process.env.FIREBASE_STORAGE_EMULATOR_HOST || '127.0.0.1:9199';
                 const publicUrl = `http://${emulatorHost}/${bucket.name}/${file.name}`;
                 console.log(`--- DEBUG: Generated emulator URL: ${publicUrl}`);
                 return publicUrl;
-            }
-            // Otherwise, get a signed URL for production.
-            else {
+            } else {
                 const [url] = await file.getSignedUrl({
                     action: 'read',
-                    expires: '03-09-2491' // A far-future expiration date
+                    expires: '03-09-2491'
                 });
                 return url;
             }
         });
-        
+
         const urls = await Promise.all(urlPromises);
         const validUrls = urls.filter(url => url !== null);
         console.log(`--- DEBUG: Returning ${validUrls.length} URLs.`);
@@ -64,7 +59,7 @@ async function getUrlsForFiles(folderPath) {
 }
 
 // API endpoint to get a single profile image
-app.get('/api/get-image-profile', async (req, res) => {
+app.get('/get-image-profile', async (req, res) => {
     try {
         const files = await getUrlsForFiles(`${basePath}image-profile/`);
         res.json({ file: files[0] || null });
@@ -74,7 +69,7 @@ app.get('/api/get-image-profile', async (req, res) => {
 });
 
 // API endpoint to get the latest images for the home page
-app.get('/api/get-latest-images', async (req, res) => {
+app.get('/get-latest-images', async (req, res) => {
     try {
         const files = await getUrlsForFiles(`${basePath}Home/`);
         res.json({ files });
@@ -84,10 +79,10 @@ app.get('/api/get-latest-images', async (req, res) => {
 });
 
 // API endpoint to get the list of gallery albums
-app.get('/api/get-gallery-albums', async (req, res) => {
+app.get('/get-gallery-albums', async (req, res) => {
     try {
         const [folders] = await bucket.getFiles({ prefix: `${basePath}Gallery/`, delimiter: '/' });
-        
+
         if (!folders.prefixes) {
             return res.json({ albums: [] });
         }
@@ -95,10 +90,9 @@ app.get('/api/get-gallery-albums', async (req, res) => {
         const albumPromises = folders.prefixes.map(async (folder) => {
             const folderName = folder.name.split('/').slice(-2, -1)[0];
             const [files] = await bucket.getFiles({ prefix: folder.name, limit: 1 });
-            
+
             let firstImage = null;
             if (files.length > 0 && !files[0].name.endsWith('/')) {
-                 // Apply the same logic for album covers
                 if (isEmulated) {
                     const emulatorHost = process.env.FIREBASE_STORAGE_EMULATOR_HOST || '127.0.0.1:9199';
                     firstImage = `http://${emulatorHost}/${bucket.name}/${files[0].name}`;
@@ -110,14 +104,14 @@ app.get('/api/get-gallery-albums', async (req, res) => {
                     firstImage = url;
                 }
             }
-            
+
             return {
-                folderNameReal: folder.name, 
+                folderNameReal: folder.name,
                 folderName: folderName,
                 firstImage: firstImage
             };
         });
-        
+
         const albums = await Promise.all(albumPromises);
         res.json({ albums });
     } catch (error) {
@@ -127,13 +121,12 @@ app.get('/api/get-gallery-albums', async (req, res) => {
 });
 
 // API endpoint to get all images for a specific gallery album
-app.get('/api/get-images-album', async (req, res) => {
+app.get('/get-images-album', async (req, res) => {
     const albumPath = req.query.album;
     if (!albumPath) {
         return res.status(400).send('Album path is required');
     }
     try {
-        // This endpoint now automatically benefits from the updated function
         const files = await getUrlsForFiles(albumPath);
         res.json({ files });
     } catch (error) {
