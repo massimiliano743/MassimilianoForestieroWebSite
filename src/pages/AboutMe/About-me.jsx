@@ -3,7 +3,11 @@ import './About-me.less';
 
 export function AboutMe() {
     const [profileImage, setProfileImage] = useState('');
-    const baseUrl = "https://massimilianoforesti-3914-5d676.web.app";
+    
+    // Use local emulator in development, and production URL otherwise
+    const baseUrl = process.env.NODE_ENV === 'development' 
+        ? 'http://127.0.0.1:5001/massimilianoforesti-3914-5d676/us-central1' 
+        : 'https://massimilianoforesti-3914-5d676.web.app';
 
     useEffect(() => {
         fetch(`${baseUrl}/api/get-image-profile`)
