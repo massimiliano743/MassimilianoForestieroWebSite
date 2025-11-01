@@ -24,7 +24,7 @@ export function AboutMe() {
         <div className={'content-page-template'}>
             <div className={'about-me-page'}>
                 <div className={'title'}>
-                    <h1>About Me</h1>
+                    <h1>About Me Test</h1>
                 </div>
                 <div className={'description'}>
                     <div className={'text-description'}>
